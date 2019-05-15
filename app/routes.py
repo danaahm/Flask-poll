@@ -48,6 +48,18 @@ def logout():
 	logout_user()
 	return redirect(url_for('index'))
 
+@app.route('/admin/dashboard')
+def dashboard():
+	if not (current_user.is_authenticated and current_user.is_admin):
+		return redirect(url_for('index'))
+	return render_template("dashboard.html")
+
+@app.route('/admin/users')
+def users():
+	if not (current_user.is_authenticated and current_user.is_admin):
+		return redirect(url_for('index'))
+	return render_template("users.html")
+
 @app.route('/submit')
 def submit():
 	return render_template("submit_video.html")
@@ -56,15 +68,11 @@ def submit():
 def view():
 	return render_template("view_video.html")
 
-@app.route('/dashboard')
-def dashboard():
-	return render_template("dashboard.html")
 
 
 
-@app.route('/users')
-def users():
-	return render_template("users.html")
+
+
 
 
 @app.route('/votes')
