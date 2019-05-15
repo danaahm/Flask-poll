@@ -1,10 +1,23 @@
+from datetime import datetime
 from app import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
+    email = db.Column(db.String(120),unique=True)
     password_hash = db.Column(db.String(128))
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
+class Video(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(256))
+    text = db.Column(db.String(2048))
+    image_url = db.Column(db.String(265))
+    video_url = db.Column(db.String(256))
+    is_published = db.Column(db.Boolean, default=False, nullable=False)
+    uploaded_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class Vote(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    video_id = db.Column(db.Integer, db.ForeignKey('video.id'))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
