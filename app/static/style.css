@@ -58,7 +58,6 @@ body
     color: #fff;
     font-size: 1.2em;
     margin: 5px;
-    /* border: 2px solid #2f2c40; */
     padding: 5px;
     border-radius: 37px;
     padding-left: 10px;
@@ -68,6 +67,15 @@ body
 .navbar-button:hover
 {
     text-decoration: none;
+}
+.navbar-text
+{
+    font-family: 'Quicksand', sans-serif;
+    color: #fff;
+    font-size: 1.2em;
+    margin: 5px;
+    padding: 5px;
+    font-weight: bolder;
 }
 
 
