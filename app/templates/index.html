@@ -30,9 +30,13 @@
        <li class="nav-item active">
         <a class="navbar-button" href="{{ url_for('register') }}">Register</a>
       </li>
+      {% elif current_user.is_admin%}
+      <li class="nav-item active">
+        <a class="navbar-button" href="{{url_for('dashboard')}}">Go to dashboard</a>
+      </li>
       {% else %}
       <li class="nav-item active">
-        <a class="navbar-button" href=".">Submit Video</a>
+          <a class="navbar-button" href=".">Submit Video</a>
       </li>
       {% endif %}
     </ul>
