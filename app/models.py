@@ -9,7 +9,8 @@ class User(UserMixin,db.Model):
     email = db.Column(db.String(120),unique=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
-    
+    registered_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    votes = db.relationship('Vote', backref='giver', lazy='dynamic')
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 

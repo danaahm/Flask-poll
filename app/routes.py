@@ -51,14 +51,26 @@ def logout():
 @app.route('/admin/dashboard')
 def dashboard():
 	if not (current_user.is_authenticated and current_user.is_admin):
-		return redirect(url_for('index'))
+		return redirect(url_for('login'))
 	return render_template("dashboard.html")
 
 @app.route('/admin/users')
 def users():
 	if not (current_user.is_authenticated and current_user.is_admin):
-		return redirect(url_for('index'))
-	return render_template("users.html")
+		return redirect(url_for('login'))
+	users= User.query.filter_by(is_admin=False)
+	return render_template("users.html",users=users)
+
+@app.route('/admin/users/delete/<user_id>')
+def delete_user(user_id):
+	if not (current_user.is_authenticated and current_user.is_admin):
+		return redirect(url_for('user_id'))
+	user = User.query.filter_by(id=user_id).first()
+	flash("User "+user.email+" Has been Removed!")
+	User.query.filter_by(id=user_id).delete()
+	db.session.commit()
+	return redirect(url_for('users'))
+	
 
 @app.route('/submit')
 def submit():
