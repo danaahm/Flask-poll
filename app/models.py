@@ -3,6 +3,9 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import login
+from flask import url_for
+from app import db
+
 
 class User(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -17,6 +20,21 @@ class User(UserMixin,db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    def VotedOnVideo(self,video_id):
+        return Vote.query.filter_by(user_id=self.id,video_id=video_id).count()
+    
+    def voteOnVideo(self,video_id):
+        if self.VotedOnVideo(video_id):
+            return False
+        vote = Vote(user_id=self.id,video_id=video_id)
+        db.session.add(vote)
+        db.session.commit() 
+        return 1
+    
+    def takeVoteBack(self,video_id):
+        Vote.query.filter_by(user_id=self.id,video_id=video_id).delete()
+        db.session.commit()
+        return 1
 
 @login.user_loader
 def load_user(id):
@@ -37,6 +55,13 @@ class Video(db.Model):
             return 'Published'
         else:
             return 'Hidden'
+    def getImgagePublicUrl(self):
+        return url_for('uploaded_images_access',filename=self.image_url)
+    def getVideoPulbicUrl(self):
+        return url_for('uploaded_videos_access',filename=self.video_url)
+
+
+
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)

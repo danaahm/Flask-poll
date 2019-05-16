@@ -110,9 +110,47 @@ def admin_new_video():
 def submit():
 	return render_template("submit_video.html")
 
-@app.route('/view')
-def view():
-	return render_template("view_video.html")
+@app.route('/view/<video_id>')
+def view(video_id):
+	video = Video.query.filter_by(id=video_id).first()
+	if video.is_published == False and current_user.is_admin == False:
+		return redirect(url_for('index'))
+	return render_template("view_video.html",video=video)
+
+@app.route('/videos/<video_id>/<action>')
+def video_action(video_id,action):
+	if not current_user.is_authenticated:
+		return redirect(url_for('login'))
+	if (action=='publish' or action=='unpublish') and current_user.is_admin == False:
+		return redirect(url_for('login'))
+
+	video = Video.query.filter_by(id=video_id).first()
+	
+	if action=='publish':
+		video.is_published = True
+		db.session.commit()
+		return redirect(url_for('videos'))
+	
+	if action=='unpublish':
+		video.is_published = False
+		db.session.commit()
+		return redirect(url_for('videos'))
+	
+	if action=='vote':
+		current_user.voteOnVideo(video.id)
+		return redirect(url_for('view',video_id=video.id))
+	
+	if action=='takebakvote':
+		current_user.takeVoteBack(video.id)
+		return redirect(url_for('view',video_id=video.id))
+	
+	return redirect(url_for('index'))
+	
+
+
+	
+
+		
 
 
 

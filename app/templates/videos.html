@@ -80,13 +80,16 @@
 							</thead>
 							{% for vid in videos %}
 							<tr>
-								<td><a href="#">{{vid.title}}</a></td>
+								<td><a href="{{url_for('view',video_id=vid.id)}}">{{vid.title}}</a></td>
 								<td>{{vid.uploader.email}}</td>
 								<td>{{vid.votes.count()}}</td>
 								<td>{{vid.getStateString()}}</td>
 								<td style="text-align: right">
-									<a class="btn btn-sm btn-danger" href="#">Unpublish</a>
-									<a class="btn btn-sm btn-primary" href="#">publish</a>
+									{% if vid.is_published%}
+									<a class="btn btn-sm btn-danger" href="{{url_for('video_action',video_id=vid.id,action='unpublish')}}">Unpublish</a>
+									{% else %}
+									<a class="btn btn-sm btn-primary" href="{{url_for('video_action',video_id=vid.id,action='publish')}}">publish</a>
+									{% endif %}
 									<a class="btn btn-sm btn-dark" href="#">edit</a>
 								</td>
 							</tr>

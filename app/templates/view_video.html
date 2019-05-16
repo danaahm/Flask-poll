@@ -23,7 +23,7 @@
         <!-- 16:9 aspect ratio -->
         <div class="embed-responsive embed-responsive-16by9">
           <video controls>
-            <source src="{{ url_for('static', filename='files/sample_video.mp4') }}" type="video/mp4">
+            <source src="{{ video.getVideoPulbicUrl() }}" type="video/mp4">
             </video>
           </div>
         </div>
@@ -31,17 +31,18 @@
       <br>
       <div class="row">
         <div class="col-lg-12">
-          <p class="video-title">Gylfi Sigurdsson vs. Leicester City <span class="video-tilte-vote-count"><span style="font-weight: bold;">150</span> votes so far</span></p> 
-          <p class="video-desc">It was a season of ups and downs for Everton, perfectly encapsulated by this looping strike from Gylfi Sigurdsson who
-           blasted it from way outside the box and somehow got the ball to hook from top to bottom, burying into the upper-left corner
-         giving the Toffees a lead on the road.</p>
+          <p class="video-title">{{video.title}} <span class="video-tilte-vote-count"><span style="font-weight: bold;">{{video.votes.count()}}</span> votes so far</span></p> 
+          <p class="video-desc">{{video.text}}</p>
          <br>
        </div>
      </div><!-- row -->
      <div class="row text-center">
       <div class="col-lg-12">
-        <a class="video-page-vote-btn" href="">VOTE</a>
-        <a class="video-page-vote-back-btn" href="">TAKE VOTE BACK</a>
+        {% if current_user.VotedOnVideo(video.id)%}
+        <a class="video-page-vote-back-btn" href="{{url_for('video_action',video_id=video.id,action='takebakvote')}}">TAKE VOTE BACK</a>
+        {% else %}
+        <a class="video-page-vote-btn" href="{{url_for('video_action',video_id=video.id,action='vote')}}">VOTE</a>
+        {% endif %}
       </div>
     </div>
 
