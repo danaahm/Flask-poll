@@ -34,35 +34,53 @@
           <br>
         </div>
       </div><!-- row -->
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="form-group">
-            <label for="title-input">Title</label>
-            <input type="text" class="form-control form-control-lg" id="title-input" aria-describedby="titleHelp" placeholder="Enter title">
-            <small id="titleHelp" class="form-text text-muted">A title for your submition.</small>
+
+      <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="title-input">Title</label>
+              {{form.title(class='form-control form-control-lg',id='title-input',aria_describedby='titleHelp',placeholder='Enter title')}}
+							{% for error in form.title.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+              <small id="titleHelp" class="form-text text-muted">A title for your submition.</small>
+            </div>
+            <div class="form-group">
+              <label for="description-input">Enter a description for your submition</label>
+              {{form.text(class='form-control', id='description-input',rows='5')}}
+							{% for error in form.text.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+            </div>
+            
           </div>
-          <div class="form-group">
-            <label for="description-input">Enter a description for your submition</label>
-            <textarea class="form-control" id="description-input" rows="3"></textarea>
-          </div>
-          
-        </div>
-        <div class="col-lg-6">
-         <div class="form-group">
-          <label for="video-file"><b>Choose the video file</b></label>
-          <input type="file" class="form-control-file" id="video-file" accept="video/*">
-          <small class="form-text text-muted">The video must be in web format.</small>
-        </div>
-        <br>
-        <div class="form-group">
-          <label for="video-file"><b>Choose the video preview image</b></label>
-          <input type="file" class="form-control-file" id="video-file" accept="image/*">
-          <small class="form-text text-muted">Choose an image that is shown as preview for your video.</small>
-        </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="video-file"><b>Choose the video file</b></label>
+              {{form.video(class='form-control-file',id='video-file',accept='video/*')}}
+							<small class="form-text text-muted">The video must be in web format.</small>
+							<br>
+							{% for error in form.video.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="video-file"><b>Choose the video preview image</b></label>
+              {{form.image(class='form-control-file',id='image-file',accept='image/*')}}
+							<small class="form-text text-muted">Choose an image that is shown as preview for your video.</small>
+							<br>
+							{% for error in form.video.errors %}
+              <span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+            </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
 
     </div><!-- row -->
+  </form>
 
   </div>
 </section>

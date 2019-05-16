@@ -14,7 +14,21 @@ from werkzeug.utils import secure_filename
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html', title='Home')
+	videos = Video.query.all()
+	first = videos[0]
+
+	video_3_per_row = [[]]
+	index = 0
+	for v in videos:
+		if len(video_3_per_row[-1]) < 3:
+			video_3_per_row[-1].append(index)
+		else:
+			video_3_per_row.append([index])
+		index += 1
+
+		
+			
+	return render_template('index.html', title='Home',videos=videos,first=first,video_3_per_row=video_3_per_row)
 
 @app.route('/register',methods=['GET', 'POST'])
 def register():
@@ -106,9 +120,6 @@ def admin_new_video():
 	return render_template('admin_new_video.html', title='Submit new video', form=form)
 
 
-@app.route('/submit')
-def submit():
-	return render_template("submit_video.html")
 
 @app.route('/view/<video_id>')
 def view(video_id):
@@ -152,6 +163,28 @@ def video_action(video_id,action):
 
 		
 
+@app.route('/submit',methods=['GET', 'POST'])
+def submit():
+	if not (current_user.is_authenticated):
+		return redirect(url_for('login'))
+	form = SubmitVideoForm()
+	if form.validate_on_submit():
+		f1 = form.image.data
+		f2 = form.video.data
+		ext1 = os.path.splitext(f1.filename)[1]
+		ext2 = os.path.splitext(f2.filename)[1]
+		filename1 = str(uuid.uuid4())+ext1
+		filename2 = str(uuid.uuid4())+ext2
+		f1.save(os.path.join(app.images_upload_dir,filename1))
+		f2.save(os.path.join(app.videos_upload_dir,filename2))
+		
+		video = Video(title=form.title.data,text=form.text.data,image_url=filename1,video_url=filename2,is_published=False,uploaded_by=current_user.id)
+		db.session.add(video)
+		db.session.commit()
+		flash('Video submited')
+		return redirect(url_for('index'))
+	return render_template('submit_video.html', title='Submit new video', form=form)
+	
 
 
 

@@ -102,6 +102,32 @@ h2.section-heading
 {
     /*background-color: white;*/
 }
+
+.index-goals-card-text
+{
+    height: 200px;
+    overflow: hidden;
+}
+.index-goals-card-image
+{
+    height: 200px;
+    object-fit: cover;
+}
+.index-goals-card-title
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* .index-goals-card-vote-btn
+{
+    bottom: 20px;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 20%;
+    right: 26%;
+} */
 #section-footer
 {
     padding:3%;
@@ -135,7 +161,7 @@ h2.section-heading
     font-size: 34px;
     font-weight: bold;
     color: #ffffff;
-    /* text-shadow: 2px 2px 7px #000000; */
+    text-shadow: 2px 2px 7px #000000;
 }
 .card-rank-1
 {
