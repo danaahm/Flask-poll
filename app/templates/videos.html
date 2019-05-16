@@ -60,6 +60,13 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-12">
+					{% with messages = get_flashed_messages() %}
+					{% for message in messages %}
+					<div class="alert alert-secondary">
+						{{ message }}
+					</div><br>
+					{% endfor %}
+					{% endwith %}
 					<table class="table table-striped">
 						<tbody>
 							<thead>
@@ -71,17 +78,19 @@
 									<th scope="col">Actions</th>
 								</tr>
 							</thead>
+							{% for vid in videos %}
 							<tr>
-								<td><a href="#">Gylfi Sigurdsson vs. Leicester City</a></td>
-								<td>mark@domain.com</td>
-								<td>73</td>
-								<td>Published</td>
+								<td><a href="#">{{vid.title}}</a></td>
+								<td>{{vid.uploader.email}}</td>
+								<td>{{vid.votes.count()}}</td>
+								<td>{{vid.getStateString()}}</td>
 								<td style="text-align: right">
 									<a class="btn btn-sm btn-danger" href="#">Unpublish</a>
 									<a class="btn btn-sm btn-primary" href="#">publish</a>
 									<a class="btn btn-sm btn-dark" href="#">edit</a>
 								</td>
 							</tr>
+							{% endfor %}
 						</tbody>
 					</table>
 				</div>

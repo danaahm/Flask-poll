@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="description" content="This is a boilerplate for a Bootstrap 4.1.1 project">
+	<meta name="keywords" content="HTML, CSS, JS, Sass, JavaScript, framework, bootstrap, front-end, frontend, web development">
+	<title>Bootstrap 4</title>
+	
+	<!-- build:css -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Poppins|Quicksand|Titillium+Web:900" rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<!-- endbuild -->
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-md dashboard-navbar" style="padding-top:10px;padding-bottom: 10px;background-color: blue;">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		
+		<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="dashboard-navbar-button" href=".">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="dashboard-navbar-button active" href=".">Users</a>
+				</li>
+				<li class="nav-item">
+					<a class="dashboard-navbar-button" href=".">Votes</a>
+				</li>
+				<li class="nav-item">
+					<a class="dashboard-navbar-button" href=".">Videos</a>
+				</li>
+				<li class="nav-item">
+					
+				</li>
+			</ul>
+			<span>Welcome Admin!</span>
+			<a class="dashboard-navbar-button" href=".">Sing out</a>
+		</div>
+	</nav>
+	<section id="section-submit">
+		<div class="container">
+			<div class="row text-center">
+				<div class="col-lg-12">
+					<h2 class="section-heading">Submit a new video</h1>
+					<br>
+					<br>
+				</div>
+			</div>
+				<form action="" method="POST" enctype="multipart/form-data">
+				{{ form.hidden_tag() }}
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label for="title-input">Title</label>
+							{{form.title(class='form-control form-control-lg',id='title-input',aria_describedby='titleHelp',placeholder='Enter title')}}
+							{% for error in form.title.errors %}
+								<span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+							<small id="titleHelp" class="form-text text-muted">A title for your submition.</small>
+						</div>
+						<div class="form-group">
+							<label for="description-input">Enter a description for your submition</label>
+							{{form.text(class='form-control', id='description-input',rows='5')}}
+							{% for error in form.text.errors %}
+								<span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+						</div>
+						
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label for="video-file"><b>Choose the video file</b></label>
+							{{form.video(class='form-control-file',id='video-file',accept='video/*')}}
+							<small class="form-text text-muted">The video must be in web format.</small>
+							<br>
+							{% for error in form.video.errors %}
+								<span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+						</div>
+						<br>
+						<div class="form-group">
+							<label for="video-file"><b>Choose the video preview image</b></label>
+							{{form.image(class='form-control-file',id='image-file',accept='image/*')}}
+							<small class="form-text text-muted">Choose an image that is shown as preview for your video.</small>
+							<br>
+							{% for error in form.video.errors %}
+								<span style="color: red;">[{{ error }}]</span>
+							{% endfor %}
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+					
+				</div><!-- row -->
+			</form>
+			</div>
+		</section>
+		
+		<section id="section-footer-admin" class="">
+			<div class="container">
+				<div class="row text-center">
+					<div class="col-lg-12">
+						Copyright text here for (c) 2019 - me@mydomain.com
+					</div>
+				</div>
+			</div>
+		</section>
+		
+		<!-- build:js -->
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<!-- endbuild -->
+	</body>
+	
+	</html>
+	

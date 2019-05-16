@@ -11,6 +11,7 @@ class User(UserMixin,db.Model):
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
     registered_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     votes = db.relationship('Vote', backref='giver', lazy='dynamic')
+    videos = db.relationship('Video', backref='uploader', lazy='dynamic')
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -29,6 +30,13 @@ class Video(db.Model):
     video_url = db.Column(db.String(256))
     is_published = db.Column(db.Boolean, default=False, nullable=False)
     uploaded_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    votes = db.relationship('Vote', backref='video', lazy='dynamic')
+
+    def getStateString(self):
+        if self.is_published:
+            return 'Published'
+        else:
+            return 'Hidden'
 
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
