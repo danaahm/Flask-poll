@@ -38,11 +38,16 @@
      </div><!-- row -->
      <div class="row text-center">
       <div class="col-lg-12">
-        {% if current_user.VotedOnVideo(video.id)%}
-        <a class="video-page-vote-back-btn" href="{{url_for('video_action',video_id=video.id,action='takebakvote')}}">TAKE VOTE BACK</a>
+        {% if current_user.is_anonymous %}
+          <a class="video-page-vote-btn" href="{{url_for('login')}}">LOGIN TO VOTE</a>
         {% else %}
-        <a class="video-page-vote-btn" href="{{url_for('video_action',video_id=video.id,action='vote')}}">VOTE</a>
+          {% if current_user.VotedOnVideo(video.id)%}
+          <a class="video-page-vote-back-btn" href="{{url_for('video_action',video_id=video.id,action='takebakvote')}}">TAKE VOTE BACK</a>
+          {% else %}
+          <a class="video-page-vote-btn" href="{{url_for('video_action',video_id=video.id,action='vote')}}">VOTE</a>
+          {% endif %}
         {% endif %}
+
       </div>
     </div>
 
