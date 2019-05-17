@@ -24,23 +24,23 @@
 		<div class="collapse navbar-collapse" id="navbarsExampleDefault">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item">
-					<a class="dashboard-navbar-button" href=".">Home</a>
+					<a class="dashboard-navbar-button" href="{{url_for('dashboard')}}">Home</a>
 				</li>
 				<li class="nav-item">
-					<a class="dashboard-navbar-button active" href=".">Users</a>
+					<a class="dashboard-navbar-button active" href="{{url_for('users')}}">Users</a>
 				</li>
 				<li class="nav-item">
-					<a class="dashboard-navbar-button" href=".">Votes</a>
+					<a class="dashboard-navbar-button" href="{{url_for('votes')}}">Votes</a>
 				</li>
 				<li class="nav-item">
-					<a class="dashboard-navbar-button" href=".">Videos</a>
+					<a class="dashboard-navbar-button" href="{{url_for('videos')}}">Videos</a>
 				</li>
 				<li class="nav-item">
 
 				</li>
 			</ul>
 			<span>Welcome Admin!</span>
-			<a class="dashboard-navbar-button" href=".">Sing out</a>
+			<a class="dashboard-navbar-button" href="{{url_for('logout')}}">Sing out</a>
 		</div>
 	</nav>
 	{% block content %}{% endblock %}
