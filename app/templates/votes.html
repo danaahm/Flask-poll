@@ -18,18 +18,20 @@
 					<tbody>
 						<thead>
 							<tr>
-								<th scope="col">Candidate</th>
+								<th scope="col">Video</th>
 								<th scope="col">Voted at</th>
 								<th scope="col">Voted by</th>
 								<th scope="col"></th>
 							</tr>
 						</thead>
+						{%for v in votes%}
 						<tr>
-							<td><a href="#">Gylfi Sigurdsson vs. Leicester City</a></td>
-							<td>2 May 23:32</td>
-							<td>mark@domain.com</td>
+							<td><a href="#">{{v.video.title}}</a></td>
+							<td>{{v.timestamp.strftime("%d %b %H:%M")}} (UTC)</td>
+							<td>{{v.giver.email}}</td>
 							<td style="text-align: right"><a class="btn btn-sm btn-danger" href="#">Remove</a></td>
 						</tr>
+						{%endfor%}
 					</tbody>
 				</table>
 			</div>

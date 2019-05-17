@@ -3,8 +3,9 @@ from app import app
 from app.forms import LoginForm
 from app.forms import RegisterForm
 from app.forms import SubmitVideoForm
+from app.forms import EditVideoForm
 from flask_login import current_user, login_user,logout_user
-from app.models import User,Video
+from app.models import User,Video,Vote
 from app import db
 import os
 import os.path
@@ -14,7 +15,9 @@ from werkzeug.utils import secure_filename
 @app.route('/')
 @app.route('/index')
 def index():
-	videos = Video.query.all()
+	def func(vid):
+		return vid.votes.count()
+	videos = sorted(Video.query.filter_by(is_published=True),key=func,reverse=True)
 	first = videos[0]
 
 	video_3_per_row = [[]]
@@ -71,7 +74,10 @@ def logout():
 def dashboard():
 	if not (current_user.is_authenticated and current_user.is_admin):
 		return redirect(url_for('login'))
-	return render_template("dashboard.html")
+	def func(vid):
+		return vid.votes.count()
+	videos = sorted(Video.query.all(),key=func,reverse=True)
+	return render_template("dashboard.html",videos=videos)
 
 @app.route('/admin/users')
 def users():
@@ -132,7 +138,7 @@ def view(video_id):
 def video_action(video_id,action):
 	if not current_user.is_authenticated:
 		return redirect(url_for('login'))
-	if (action=='publish' or action=='unpublish') and current_user.is_admin == False:
+	if (action=='publish' or action=='unpublish' or action=='delete') and current_user.is_admin == False:
 		return redirect(url_for('login'))
 
 	video = Video.query.filter_by(id=video_id).first()
@@ -146,6 +152,12 @@ def video_action(video_id,action):
 		video.is_published = False
 		db.session.commit()
 		return redirect(url_for('videos'))
+	if action=='delete':
+		Vote.query.filter_by(video_id=video.id).delete()
+		db.session.delete(video)
+		db.session.commit()
+		return redirect(url_for('videos'))
+
 	
 	if action=='vote':
 		current_user.voteOnVideo(video.id)
@@ -157,6 +169,39 @@ def video_action(video_id,action):
 	
 	return redirect(url_for('index'))
 	
+
+@app.route('/videos/<video_id>/edit',methods=['GET', 'POST'])
+def edit_video(video_id):
+	if not (current_user.is_authenticated and current_user.is_admin):
+		return redirect(url_for('login'))
+
+	video = Video.query.filter_by(id=video_id).first()
+
+	form = EditVideoForm()
+	
+	if form.validate_on_submit():
+		video.title = form.title.data
+		video.text = form.text.data
+		
+		if form.image.data:
+			f1 = form.image.data
+			ext1 = os.path.splitext(f1.filename)[1]
+			filename1 = str(uuid.uuid4())+ext1
+			f1.save(os.path.join(app.images_upload_dir,filename1))
+			video.image_url=filename1
+		if form.video.data:
+			f2 = form.video.data
+			ext2 = os.path.splitext(f2.filename)[1]
+			filename2 = str(uuid.uuid4())+ext2
+			f2.save(os.path.join(app.videos_upload_dir,filename2))
+			video.video_url=filename2
+		db.session.commit()
+		flash('Video updated')
+		return redirect(url_for('videos'))
+	else:
+		form.title.data = video.title
+		form.text.data = video.text
+	return render_template('admin_new_video.html', title='Edit Video', form=form)
 
 
 	
@@ -195,7 +240,8 @@ def submit():
 
 @app.route('/votes')
 def votes():
-	return render_template("votes.html")
+	votes = Vote.query.all()
+	return render_template("votes.html",votes=votes)
 
 
 

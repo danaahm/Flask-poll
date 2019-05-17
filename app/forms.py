@@ -30,3 +30,9 @@ class SubmitVideoForm(FlaskForm):
     text = TextAreaField('Text', validators=[DataRequired()])
     image = FileField(validators=[FileRequired(),FileAllowed(images, 'Images only!')])
     video = FileField(validators=[FileRequired()])
+
+class EditVideoForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    text = TextAreaField('Text', validators=[DataRequired()])
+    image = FileField()
+    video = FileField()

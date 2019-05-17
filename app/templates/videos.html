@@ -44,11 +44,12 @@
 							<td>{{vid.getStateString()}}</td>
 							<td style="text-align: right">
 								{% if vid.is_published%}
-								<a class="btn btn-sm btn-danger" href="{{url_for('video_action',video_id=vid.id,action='unpublish')}}">Unpublish</a>
+								<a class="btn btn-sm btn-warning" href="{{url_for('video_action',video_id=vid.id,action='unpublish')}}">Unpublish</a>
 								{% else %}
 								<a class="btn btn-sm btn-primary" href="{{url_for('video_action',video_id=vid.id,action='publish')}}">publish</a>
 								{% endif %}
-								<a class="btn btn-sm btn-dark" href="#">edit</a>
+								<a class="btn btn-sm btn-dark" href="{{url_for('edit_video',video_id=vid.id)}}">edit</a>
+								<a class="btn btn-sm btn-danger" href="{{url_for('video_action',video_id=vid.id,action='delete')}}" onclick="return confirm('Are you sure?')">delete</a>
 							</td>
 						</tr>
 						{% endfor %}
