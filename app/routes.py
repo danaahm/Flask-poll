@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for,send_from_directory
+from flask import render_template, flash, redirect, url_for,send_from_directory,jsonify,request
 from app import app
 from app.forms import LoginForm
 from app.forms import RegisterForm
@@ -39,7 +39,7 @@ def register():
 		return redirect(url_for('index'))
 	form = RegisterForm()
 	if form.validate_on_submit():
-		user = User(email=form.email.data)
+		user = User(email=form.email.data,api_token=str(uuid.uuid4()))
 		user.set_password(form.password.data)
 		db.session.add(user)
 		db.session.commit()
@@ -93,6 +93,7 @@ def delete_user(user_id):
 	user = User.query.filter_by(id=user_id).first()
 	flash("User "+user.email+" Has been Removed!")
 	User.query.filter_by(id=user_id).delete()
+	Vote.query.filter_by(user_id=user_id).delete()
 	db.session.commit()
 	return redirect(url_for('users'))
 
@@ -254,3 +255,178 @@ def uploaded_images_access(filename):
 @app.route('/uploads/videos/<filename>')
 def uploaded_videos_access(filename):
 	return send_from_directory(app.videos_upload_dir,filename) 
+
+#####################
+#API routes for users
+#####################
+def get_api_user():
+	if not 'token' in request.headers:
+		return None
+	users = User.query.filter_by(api_token=request.headers['token'])
+	if users.count()>0:
+		return users[0]
+	else:
+		return None
+
+
+@app.route('/api/homepage')
+def api_homepage():
+	def func(vid):
+		return vid.votes.count()
+	videos = sorted(Video.query.filter_by(is_published=True),key=func,reverse=True)
+
+	vids = []
+	i = 1
+	for v in videos:
+		vids.append({'id':v.id,'title':v.title,'votes':v.votes.count(),'rank':i})
+		i += 1
+	return jsonify({'success':True,'data':vids})
+
+
+@app.route('/api/video/<video_id>')
+def api_get_video(video_id):
+	user = get_api_user()
+	videos = Video.query.filter_by(id=video_id)
+	if videos.count()==0:
+		return jsonify({'success':False,'message':'invalid id.'})
+	else:
+		v = {}
+		v['id'] = video_id
+		v['title'] = videos[0].title
+		v['text'] = videos[0].text
+		v['image'] = videos[0].getImgagePublicUrl()
+		v['video'] = videos[0].getVideoPulbicUrl()
+		if user:
+			v['you_voted']= user.VotedOnVideo(video_id)
+		return jsonify({'success':True,'data':v})
+		
+		
+	
+
+@app.route('/api/video/<video_id>/vote',methods=['POST','DELETE'])
+def api_vote(video_id):
+	user = get_api_user()
+	if not user:
+		return jsonify({'success':False,'message':'invalid token.'})
+	
+	if request.method == 'POST':
+		user.voteOnVideo(video_id)
+	if request.method == 'DELETE':
+		user.takeVoteBack(video_id)
+
+	return jsonify({'success':True})
+
+
+#####################
+#API routes for admin
+#####################
+
+@app.route('/api/admin/users')
+def api_admin_get_users():
+	user = get_api_user()
+	if not (user and user.is_admin):
+		return jsonify({'success':False,'message':'invalid token.'})
+
+	users = User.query.filter_by(is_admin=False)
+	us = []
+	for u in users:
+		us.append({'id':u.id,'email':u.email,'registered_at':u.registered_at})
+	return jsonify({'success':True,'data':us})
+	
+
+
+
+@app.route('/api/admin/user/<user_id>',methods=['DELETE'])
+def api_admin_remove_user(user_id):
+	user = get_api_user()
+	if not (user and user.is_admin):
+		return jsonify({'success':False,'message':'invalid token.'})
+
+	user = User.query.filter_by(id=user_id).delete()
+	Vote.query.filter_by(user_id=user_id).delete()
+	db.session.commit()
+	return jsonify({'success':True})
+
+@app.route('/api/admin/votes')
+def api_admin_get_votes():
+	user = get_api_user()
+	if not (user and user.is_admin):
+		return jsonify({'success':False,'message':'invalid token.'})
+
+	votes = Vote.query.all()
+	vs = []
+	for v in votes:
+		vs.append({'id':v.id,'user_id':v.user_id,'video_id':v.video_id,'timestamp':v.timestamp})
+	return jsonify({'success':True,'data':vs})
+	
+
+
+@app.route('/api/admin/vote/<vote_id>',methods=['DELETE'])
+def api_admin_remove_vote(vote_id):
+	user = get_api_user()
+	if not (user and user.is_admin):
+		return jsonify({'success':False,'message':'invalid token.'})
+
+	user = Vote.query.filter_by(id=vote_id).delete()
+	db.session.commit()
+	return jsonify({'success':True})	
+
+
+@app.route('/api/admin/videos')
+def api_admin_get_videos():
+	user = get_api_user()
+	if not (user and user.is_admin):
+		return jsonify({'success':False,'message':'invalid token.'})
+
+	videos = Video.query.all()
+	vs = []
+	for v in videos:
+		vs.append({'id':v.id,'title':v.title,'votes':v.votes.count(),'uploaded_by':v.uploaded_by,'is_published':v.is_published})
+	return jsonify({'success':True,'data':vs})
+
+@app.route('/api/admin/video/<video_id>',methods=['DELETE'])
+def api_admin_remove_video(video_id):
+	user = get_api_user()
+	if not (user and user.is_admin):
+		return jsonify({'success':False,'message':'invalid token.'})
+
+	Video.query.filter_by(id=video_id).delete()
+	Vote.query.filter_by(video_id=video_id).delete()
+	db.session.commit()
+
+	return jsonify({'success':True})	
+
+
+@app.route('/api/admin/video/<action>/<video_id>',methods=['POST'])
+def api_admin_video_action(action,video_id):
+	user = get_api_user()
+	if not (user and user.is_admin):
+		return jsonify({'success':False,'message':'invalid token.'})
+
+	videos = Video.query.filter_by(id=video_id)
+
+	if videos.count()==0:
+		return jsonify({'success':False,'message':'invalid id.'})
+	
+	if action=='publish':
+		videos[0].is_published = True
+	elif action=='unpublish':
+		videos[0].is_published = False
+	else:
+		return jsonify({'success':False,'message':'invalid action '+action})
+
+	
+	
+	db.session.commit()
+	return jsonify({'success':True})	
+	
+
+
+
+
+
+
+
+
+
+

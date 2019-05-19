@@ -13,6 +13,7 @@ class User(UserMixin,db.Model):
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
     registered_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    api_token = db.Column(db.String(120),unique=True)
     votes = db.relationship('Vote', backref='giver', lazy='dynamic')
     videos = db.relationship('Video', backref='uploader', lazy='dynamic')
     def set_password(self, password):
@@ -21,7 +22,7 @@ class User(UserMixin,db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     def VotedOnVideo(self,video_id):
-        return Vote.query.filter_by(user_id=self.id,video_id=video_id).count()
+        return Vote.query.filter_by(user_id=self.id,video_id=video_id).count()>0
     
     def voteOnVideo(self,video_id):
         if self.VotedOnVideo(video_id):
