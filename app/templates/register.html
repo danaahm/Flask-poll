@@ -7,12 +7,12 @@
 	<meta name="description" content="This is a boilerplate for a Bootstrap 4.1.1 project">
 	<meta name="keywords" content="HTML, CSS, JS, Sass, JavaScript, framework, bootstrap, front-end, frontend, web development">
 	<meta name="author" content="Henrik H. Boelsmand">
-	<title>Bootstrap 4 boilerplate</title>
+	<title>Registration</title>
 	<link rel="shortcut icon" href="favicon.ico">
 	
 	<!-- build:css -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link href="https://fonts.googleapis.com/css?family=Poppins|Quicksand|Titillium+Web:900" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins%7CQuicksand" rel="stylesheet">
 	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 	<!-- endbuild -->
 </head>
@@ -35,11 +35,11 @@
 							</ul>
 							{% endif %}
 							{% endwith %}
-							<form action="" method="POST">
+							<form action="#" method="POST">
 								{{ form.hidden_tag() }}
 								<div class="form-group">
 									<label for="email-input">Email address</label>
-									{{ form.email(type='email',class='form-control',id='email-input',aria_describedby="emailHelp",placeholder="Enter email") }}
+									{{ form.email(type='email',class='form-control',id='email-input',placeholder="Enter email") }}
 									
 									{% for error in form.email.errors %}
 									<span style="color: red;">[{{ error }}]</span>

@@ -21,15 +21,15 @@
 				{% endfor %}
 				{% endwith %}
 				<table class="table table-striped">
-					<tbody>
 						<thead>
-							<tr>
-								<th scope="col">Email</th>
-								<th scope="col">Registered at</th>
-								<th scope="col"># of votes</th>
-								<th scope="col"></th>
-							</tr>
-						</thead>
+								<tr>
+									<th scope="col">Email</th>
+									<th scope="col">Registered at</th>
+									<th scope="col"># of votes</th>
+									<th scope="col"></th>
+								</tr>
+							</thead>
+					<tbody>
 						{%for user in users%}
 						<tr>
 							<td>{{user.email}}</td>
