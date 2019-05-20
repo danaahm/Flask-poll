@@ -129,14 +129,13 @@
         <br>
       </div>
     </div>
-
     {% for r in video_3_per_row %}
     <div class="row">
       {% for ind in r %}
       <div class="col-xl-4 col-md-4">
         <div class="card" >
           <img class="card-img-top index-goals-card-image" src="{{ videos[ind].getImgagePublicUrl() }}" alt="Card image cap">
-          <span class="card-rank">#23</span>
+          <span class="card-rank">#{{ind+1}}</span>
           <div class="card-body">
             <h5 class="card-title index-goals-card-title">{{videos[ind].title}}</h5>
             <p class="card-text index-goals-card-text">{{videos[ind].text}}</p>
@@ -146,6 +145,7 @@
           </div>
         </div><!--card-->
       </div><!--col-->
+      
       {% endfor %}
     </div>
     {% endfor %}
