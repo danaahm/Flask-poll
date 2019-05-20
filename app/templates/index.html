@@ -42,7 +42,7 @@
     </ul>
     {% if not current_user.is_anonymous %}
     <span class="navbar-text">welcome {{current_user.email}}</span>
-    <a class="navbar-button" href="{{ url_for('logout') }}">log Out</a>
+    <a class="navbar-button" href="{{ url_for('logout') }}">Log out</a>
     {% endif %}
   </div>
 </nav>
