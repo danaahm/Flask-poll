@@ -145,7 +145,7 @@ $ git push heroku master
 * [JQuery](https://code.jquery.com/jquery-3.2.1.slim.min.js)- JS library
 * [CDNJS](https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js)- JS library
 
-#Image and Video content
+## Image and Video content
 * https://www.youtube.com/watch?v=I9vXpswxMRk Chelsea Sturridge goal
 * http://www.soccer-blogger.com/2019/01/12/gif-video-andre-schurrle-goal-vs-burnley-2019-fantastic-schurrle-volley-for-fulham/ Fulham Schurrle goal
 * https://www.youtube.com/watch?v=qn2sW-3LpmA Leicester Sigurdsson goal
@@ -158,7 +158,7 @@ For the versions available, see the git repository (https://github.com/danaahm/F
 
 ## Authors
 
-* **Nicole Low & Dana Ahmadi** -
+* **Nicole Low & Dana Ahmadi** 
 
 See also (https://github.com/danaahm/Flask-poll/contributors) via Github, or git log .txt file.
 
